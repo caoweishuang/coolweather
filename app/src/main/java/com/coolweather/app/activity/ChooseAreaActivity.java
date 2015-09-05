@@ -2,7 +2,10 @@ package com.coolweather.app.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -53,6 +56,13 @@ public class ChooseAreaActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choose_area);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sharedPreferences.getBoolean("city_selected",false)){
+            Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         lvList = (ListView)findViewById(R.id.Lvlist);
         tvTitle = (TextView)findViewById(R.id.Tv_Title);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,dataList);
@@ -69,6 +79,12 @@ public class ChooseAreaActivity extends Activity {
                 }else if(currentLevel == CITY_LEVEL){
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if(currentLevel == COUNTY_LEVEL){
+                    String countyCode = countyList.get(position).getCountyCode();
+                    Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+                    intent.putExtra("county_code",countyCode);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
