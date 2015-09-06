@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.coolweather.app.R;
+import com.coolweather.app.service.AutoUpdateService;
 import com.coolweather.app.util.HttpCallBackListener;
 import com.coolweather.app.util.HttpUtil;
 import com.coolweather.app.util.Utility;
@@ -119,7 +120,6 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
                         });
                     }
                 }
-
             }
 
             @Override
@@ -133,8 +133,6 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
                 });
             }
         });
-
-
     }
 
     private void showWeather() {
@@ -147,7 +145,8 @@ public class WeatherActivity extends Activity implements View.OnClickListener {
         tvtemp2.setText(sharedPreferences.getString("temp2",""));
         linearLayout.setVisibility(View.VISIBLE);
         tvcity_name.setVisibility(View.VISIBLE);
-
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
 
 
