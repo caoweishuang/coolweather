@@ -51,18 +51,21 @@ public class ChooseAreaActivity extends Activity {
     private City selectedCity;
 
     private int currentLevel;
+    private boolean isFromWeatherActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.choose_area);
+        isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity",false);
+        Log.i("TAG",String.valueOf(isFromWeatherActivity));
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(sharedPreferences.getBoolean("city_selected",false)){
+        if(sharedPreferences.getBoolean("city_selected",false) && !isFromWeatherActivity){
             Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
             startActivity(intent);
             finish();
             return;
         }
+        setContentView(R.layout.choose_area);
         lvList = (ListView)findViewById(R.id.Lvlist);
         tvTitle = (TextView)findViewById(R.id.Tv_Title);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,dataList);
@@ -212,7 +215,11 @@ public class ChooseAreaActivity extends Activity {
             queryCities();
         }else if(currentLevel == CITY_LEVEL){
             queryProvinces();
-        }else if(currentLevel == PROVINCE_LEVEL){
+        }else {
+            if(isFromWeatherActivity){
+                Intent intent = new Intent(ChooseAreaActivity.this,WeatherActivity.class);
+                startActivity(intent);
+            }
             finish();
         }
     }
